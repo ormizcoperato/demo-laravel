@@ -14,6 +14,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="antialiased">
+<body class="antialiased bg-stone-900 text-white">
 {{$slot}}
 </body>

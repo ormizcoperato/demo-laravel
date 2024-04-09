@@ -4,9 +4,9 @@
     <ul>
         @foreach ($jobs as $job)
             <li>
-                <x-nav-link href="/jobs/{{ $job['id'] }}" class="text-blue-500 hover:underline">
+                <a href="/jobs/{{ $job['id'] }}" class="text-blue-500 hover:underline">
                     <strong>{{$job['title']}}</strong> pays {{$job['salary']}} yearly.
-                </x-nav-link>
+                </a>
             </li>
         @endforeach
     </ul>
