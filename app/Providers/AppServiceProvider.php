@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // \Illuminate\Database\Eloquent\Model::preventLazyLoading(); // prevents the use of lazy loading in your app (causes crash when lazy loading is used)
+        // \Illuminate\Pagination\Paginator::useBootstrapFive(); // changes the default pagination view
     }
 }

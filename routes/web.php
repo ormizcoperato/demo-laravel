@@ -19,7 +19,14 @@ Route::get('/', function () {
 });
 
 Route::get('/jobs', function () {
-    return view('jobs', ['jobs' => Job::all()]);
+    // $jobs = Job::all(); // lazy loading
+    // $jobs = Job::with('employer')->get(); // eager loading
+
+    $jobs = Job::with('employer')->paginate(5); // built-in FULL pagination
+    // $jobs = Job::with('employer')->simplePaginate(5); // built-in SIMPLE pagination
+    // $jobs = Job::with('employer')->cursorPaginate(5); // built-in CURSOR pagination
+
+    return view('jobs', ['jobs' => $jobs]);
 });
 
 Route::get('/jobs/{id}', function ($id) {
