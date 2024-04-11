@@ -40,19 +40,6 @@
             @enderror
         </div>
 
-
-        {{--        @if($errors->any())--}}
-        {{--            <div class="mt-6">--}}
-        {{--                <ul>--}}
-        {{--                    @foreach($errors->all() as $error)--}}
-        {{--                        <li class="text-red-500 italic">--}}
-        {{--                            {{$error}}--}}
-        {{--                        </li>--}}
-        {{--                    @endforeach--}}
-        {{--                </ul>--}}
-        {{--            </div>--}}
-        {{--        @endif--}}
-
         <div class="mt-6">
             <button type="reset" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
                 Reset
