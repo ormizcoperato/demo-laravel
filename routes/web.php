@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Job;
+use App\Http\Controllers\JobController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,87 +14,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// inline controller
 Route::get('/', function () {
     return view('welcome');
 });
 
-/* Index */
-Route::get('/jobs', function () {
-    // $jobs = Job::all(); // lazy loading
-    // $jobs = Job::with('employer')->get(); // eager loading
+// short controller (no function use at all)
+Route::view('/contact', 'contact');
 
-    // $jobs = Job::with('employer')->simplePaginate(5); // built-in SIMPLE pagination
-    // $jobs = Job::with('employer')->cursorPaginate(5); // built-in CURSOR pagination (same as simple, better performance, uri is not human friendly)
+// class controller
+Route::get('/jobs', [JobController::class, 'index']);
 
-    $jobs = Job::with('employer')->latest()->paginate(5); // built-in FULL pagination
-    return view('jobs.index', ['jobs' => $jobs]);
+// grouped controller
+Route::controller(JobController::class)->group(function () {
+    Route::get('/jobs', 'index');
+    Route::get('/jobs/create', 'create');
+    // wildcards routes should be declared lastly (method dependent), to not override non-wildcard routes
+    Route::get('/jobs/{job}', 'show');
+    Route::post('/jobs', 'store');
+    Route::get('/jobs/{job}/edit', 'edit');
+    Route::patch('/jobs/{job}', 'update');
+    Route::delete('/jobs/{job}', 'destroy');
 });
 
-/* Create */
-Route::get('/jobs/create', function () {
-
-    // "." can replaces "/" (they both can be used)
-    return view('jobs.create');
-});
-
-/* Show */
-Route::post('/jobs', function () {
-    request()->validate([
-        'title' => ['required', 'min:3'],
-        'salary' => ['required'],
-    ]);
-
-    Job::create([
-        'title' => request('title'),
-        'salary' => request('salary'),
-        'employer_id' => 1,
-    ]);
-
-    return redirect('/jobs');
-});
-
-// wildcards routes should be declared lastly, to not override non-wildcard routes
-/* Store */
-Route::get('/jobs/{id}', function ($id) {
-    $job = Job::find($id);
-
-    return view('jobs.show', ['job' => $job]);
-});
-
-/* Update */
-Route::patch('/jobs/{id}', function ($id) {
-    // authorize (On hold...)
-
-    request()->validate([
-        'title' => ['required', 'min:3'],
-        'salary' => ['required'],
-    ]);
-
-    $job = Job::findOrFail($id);
-
-    // $job->title = request('title');
-    // $job->salary = request('salary');
-    // $job->save();
-
-    $job->update([
-        'title' => request('title'),
-        'salary' => request('salary'),
-    ]);
-
-    return redirect('/jobs/' . $job->id);
-});
-
-/* Destroy */
-Route::delete('/jobs/{id}', function ($id) {
-    // authorize (On hold...)
-
-    $job = Job::findOrFail($id)->delete();
-    return redirect('/jobs');
-});
-
-/* Edit */
-Route::get('/jobs/{id}/edit', function ($id) {
-    $job = Job::find($id);
-
-    return view('jobs.edit', ['job' => $job]);
-});
+/*
+"Route::resource" registers all the default names which are:
+1. index
+2. store
+3. create
+4. show
+5. update
+6. destroy
+7. edit
+*/
+//  Route::resource('jobs', JobController::class, [
+//      'only' => ['index'],
+//      'except' => ['edit'],
+//  ]);
